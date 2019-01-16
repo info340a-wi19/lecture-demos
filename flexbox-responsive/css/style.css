@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
+/* navigation */
+nav li {
+    display: inline-block;
+    border: 1px solid black ;
+    border-bottom-width:5px;
+    padding: .5em;
+}
+
+
+/* container */
+.boxes {
+    padding: .5em 0;
+    background-color: rebeccapurple;
+}
+
+ /* items */
+.boxes div {
+    background-color: orange;
+    margin: .5em;
+    padding: .25em;
+}
