@@ -11,3 +11,4 @@ const SAMPLE_TASKS = [
 
 //render App, passing it array as prop!
 ReactDOM.render(<App initialTasks={SAMPLE_TASKS} />, document.getElementById('root'));
+
