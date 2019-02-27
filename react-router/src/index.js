@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './style.css'; //include our css (bundled)
 import App from './App';
 
+import {BrowserRouter} from 'react-router-dom';
+
+
+import 'whatwg-fetch';
+
 const BLOG_POSTS = { //model for demoing
   '2019-02-12':"So much snow........",
   '2019-02-11':"Ugh, more snow...",
@@ -11,4 +16,8 @@ const BLOG_POSTS = { //model for demoing
 };
 
 //render App, passing it array as prop!
-ReactDOM.render(<App initialPosts={BLOG_POSTS} />, document.getElementById('root'));
+ReactDOM.render(
+  <BrowserRouter>
+    <App initialPosts={BLOG_POSTS} />
+  </BrowserRouter>, 
+document.getElementById('root'));
