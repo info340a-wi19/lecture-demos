@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import SignUpForm from './SignUp';
-
 export default class App extends Component {
   render() {
     return (
