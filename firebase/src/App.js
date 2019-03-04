@@ -1,14 +1,32 @@
 import React, { Component } from 'react';
 
+import firebase from 'firebase/app';
+
 export default class App extends Component {
+  constructor(props){
+    super(props)
+
+    this.state = {showSignForm: true}
+  }
+
   render() {
+
+    let content = null;
+    if(this.state.showSignForm) {
+      content = <SignUpForm />
+    } else {
+      //...
+    }
+
     return (
       <div>
-        <SignUpForm />
+        {content}
       </div>
-    );
+    )
   }
 }
+
+
 
 export class SignUpForm extends Component {
 
@@ -18,7 +36,22 @@ export class SignUpForm extends Component {
       email: '',
       password: '',
       username: '',
+      user: null,
     };
+  }
+
+  componentDidMount() {
+
+    //when I signed in or signed out
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      if(firebaseUser) { //if exists, then we logged in
+        console.log("Logged in as", firebaseUser.email);
+        this.setState({user firebaseUser})
+      } else {
+        console.log("Logged out");
+        this.setState({user: null})
+      }
+    })
 
   }
 
@@ -26,17 +59,43 @@ export class SignUpForm extends Component {
   handleSignUp = () => {
     this.setState({errorMessage:null}); //clear old error
 
+    console.log("Creating user", this.state.email);
+
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((userCredential) => {
+        let user = userCredential.user;
+        console.log(user);
+
+        let updatePromise = user.updateProfile({displayName: this.state.username})
+        return updatePromise;
+      })
+      .then(() => {
+        this.setState((prevState) => {
+          let updatedUser = {...prevState.user, displayName: this.state.username}
+          return {user: updatedUser}; //updating the state
+        });
+      })
+      .catch((err) => {
+        this.setState({errorMessage: err.message});
+      })
+    
   }
 
   //A callback function for logging in existing users
   handleSignIn = () => {
     this.setState({errorMessage:null}); //clear old error
 
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+      .catch((err) => {
+        this.setState({errorMessage: err.message});
+      })
   }
 
   //A callback function for logging out the current user
   handleSignOut = () => {
     this.setState({errorMessage:null}); //clear old error
+
+    firebase.auth().signOut()
 
   }
 
