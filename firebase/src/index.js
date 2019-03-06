@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
 import 'bootstrap/dist/css/bootstrap.css'; //bootstrap (bundled)
 import './style.css';

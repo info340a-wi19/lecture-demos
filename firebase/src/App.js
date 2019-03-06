@@ -50,7 +50,8 @@ export default class App extends Component {
       content = (
         <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
       )
-    } else {
+    } 
+    else { //signed in
       content = (
         <div>
           <div className="alert alert-success">

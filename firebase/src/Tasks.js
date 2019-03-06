@@ -1,24 +1,81 @@
 import React, { Component } from 'react';
 
+import firebase from 'firebase/app';
+
+//jitc
+let jitc = {
+  message: "Hello world",
+  user_info: {
+    name: "Joel"
+  },
+  tasks: {
+    'aslkdjaslkdj': {id:1, description: "Foo"},
+    'iuyiuyiu': {id:2, description: "Bar"},
+    'mn,mn,mn': {id:3, description:"Baz"},
+  }
+}
+
+//delete tasks[1]
+//modify tasks[1].description = "Changed"
+
+
 export default class TaskApp extends Component {
   constructor(props){
     super(props)
 
     this.state = {
+      message: '',
       tasks: []
     }
+  }
+
+  componentDidMount() {
+    let messageRef = firebase.database().ref('message')
+    messageRef.on('value', (snapshot) => {
+      let value = snapshot.val();
+
+      console.log("value is now: ", value);
+      this.setState({message: value});
+    });
+
+    let tasksRef = firebase.database().ref('tasks');
+    tasksRef.on('value', (snapshot) => {
+      let value = snapshot.val();
+
+      let taskIds = Object.keys(value);
+      let tasks = taskIds.map((taskId) => {
+        return {id: taskId, ...value[taskId]}
+      })
+
+      console.log(tasks);
+      this.setState({tasks: tasks})
+    })
+
   }
 
   //add a new task to the list
   addTask = (taskDescription) => {
     console.log("Adding new task: ", taskDescription);
 
+    // let messageRef = firebase.database().ref('message')
+    // messageRef.set(taskDescription)
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+
+    if(userId != "Joel Ross") 
+
+    let newTask = {
+      description: taskDescription,
+      complete: false
+    }
+
+    let tasksRef = firebase.database().ref('tasks');
+    tasksRef.push(newTask);
+  
+
+
     // this.setState((prevState) => {
-    //   let newTask = {
-    //     id: prevState.tasks.length + 1,
-    //     description: taskDescription,
-    //     complete: false
-    //   }
     //   let updatedTasks = prevState.tasks.concat(newTask)
     //   return {tasks: updatedTasks};
     // })
@@ -47,6 +104,7 @@ export default class TaskApp extends Component {
     return (
       <div className="container" onClick={this.testClick}>
         <p className="lead">Things <strong>WE</strong> have to do ({incomplete.length})</p>
+        <p>{this.state.message}</p>
         <TaskList tasks={tasks} howToToggle={this.toggleCompletedness} />
         <AddTaskForm howToAdd={this.addTask} />
       </div>
